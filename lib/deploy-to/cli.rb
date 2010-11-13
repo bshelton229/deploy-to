@@ -6,14 +6,15 @@ module DeployTo
     attr_reader :config, :rsync
 
     def initialize
+      #Parse the CLI options with optparse
+      parse_options
+      
       @config = DeployTo::Config.get_config
       @command = false
       @rsync = `which rsync`.chop
       #Find our base dir
       @base_dir = File.expand_path('../',DeployTo::Config.config_file)
-      #Parse the CLI options with optparse
-      parse_options
-      
+
       #Set what will not be @site_name after running optparse
       @site_name = ARGV.shift
       

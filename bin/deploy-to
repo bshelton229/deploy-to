@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'production-sync'
+require 'deploy-to'
 
-production_sync = ProductionSync::CLI.new
-production_sync.run
+dt = DeployTo::CLI.new
+dt.run

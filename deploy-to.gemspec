@@ -1,4 +1,4 @@
-lib = File.expand_path('../../lib/', __FILE__)
+lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
 require 'deploy-to'
@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.version = DeployTo::VERSION
   s.authors = ["Bryan Shelton"]
   s.email = 'bryan@sheltonopensolutions.com'
-  s.summary = 'Rsync wrapper'
-  s.homepage = 'http://github.com/bshelton229/production-sync'
+  s.summary = 'Rsync deployment wrapper'
+  s.homepage = 'http://github.com/bshelton229/deploy-to'
   s.description = 'DeployTo Project'
 
   s.required_ruby_version     = '>= 1.8.7'

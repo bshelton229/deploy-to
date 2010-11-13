@@ -10,9 +10,6 @@ module DeployTo
     
       #Load the YAML
       @options = YAML::load(File.open(file))
-      
-      #Shape it up
-      
     end
     
     #Find the config file and set @config_file
@@ -25,7 +22,7 @@ module DeployTo
     def self.lookfor(path)
       #Get out of here if we're at root (/)
       if path == "/"
-        puts "There is no deploy-to.yml config file"
+        puts "Can't find a deploy-to.yml file."
         exit 1
       end
     

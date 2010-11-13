@@ -27,7 +27,8 @@ module DeployTo
     # Run the command
     def run
       build_command
-      puts @command
+      puts "Running:\n"
+      puts @command + "\n\n"
       run_command
     end
     
@@ -53,18 +54,17 @@ module DeployTo
         exclude_cli = ''
       end
       
-      
-      #Define the command
-      @command = "#{@rsync} -avz --delete --exclude '.git' --exclude '.svn' --exclude '.gitignore' #{exclude_cli} #{@base_dir}/ #{@site_uri}"
+      # Define the command
+      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@site_uri}"
       
     end
     
-    #Run the command if @command has been set
+    # Run the command if @command has been set
     def run_command
       system @command if @command
     end
     
-    #Optparse options
+    # Optparse options 
     def parse_options
       ARGV.options do |opts|
         #Version
@@ -77,26 +77,33 @@ module DeployTo
     end
     
     # This will check our configuration variables and
-    # exit 1 if we can't proceed
+    # exit 1 if we can't proceed.
     def parse_config
-      if @site_name.nil?
-        puts "Please provide a site name to deploy\ndeploy-to site_name"
-        exit 1
-      end
-      
+      # Make sure there are site definitions
       if not @config.has_key?('sites')
-        puts "Please add site definitions to your deploy-to.yml file."
+        puts "Please add at least one site definitions to your deploy-to.yml file."
         exit 1
       end
       
+      # Check for a site_name.
+      if @site_name.nil?
+        puts "Specify which site you woud like to deploy:\n"
+        @config['sites'].each do |site|
+          puts site[0] + "\n"
+        end
+        exit 1
+      end
+
+      # Make sure the site_name is defined.
       if not @config['sites'].has_key?(@site_name)
         puts "There is no definitions for \"#{@site_name}\" in your deploy-to.yml file."
         exit 1
       end
       
+      # Define some variables.
       @site = @config['sites'][@site_name]
       @site_uri = "#{@site['user']}@#{@site['host']}:#{@site['path']}"
-      
+      @site_uri += "/" if not @site_uri[-1,1] == "/"
     end
     
   end

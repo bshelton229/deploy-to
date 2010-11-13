@@ -75,6 +75,8 @@ module DeployTo
     # Optparse options 
     def parse_options
       ARGV.options do |opts|
+        #Set usage banner
+        opts.banner = "Usage: deploy-to [options] site_name"
         #Version
         opts.on("-v","--version","Outputs version") { 
           puts "Production Sync - #{DeployTo::VERSION}"

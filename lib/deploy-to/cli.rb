@@ -30,6 +30,10 @@ module DeployTo
       build_command
       puts "Running:\n"
       puts @command + "\n\n"
+      # Display a message if we're only doing a dry run
+      if @dry_run
+        puts "Dry run only -->\n"
+      end
       run_command
     end
     
@@ -55,8 +59,11 @@ module DeployTo
         exclude_cli = ''
       end
       
+      # If we're in a dry run, set the rsync option
+      dry_run = @dry_run ? ' --dry-run' : ''
+      
       # Define the command
-      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@site_uri}"
+      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@site_uri}"
       
     end
     
@@ -72,6 +79,9 @@ module DeployTo
         opts.on("-v","--version","Outputs version") { 
           puts "Production Sync - #{DeployTo::VERSION}"
           exit 
+        }
+        opts.on("-s","--simulate","Simulate only") {
+          @dry_run = true
         }
         opts.parse!
       end

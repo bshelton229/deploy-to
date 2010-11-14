@@ -124,7 +124,7 @@ module DeployTo
       @remote_uri = "#{@remote['user']}@#{@remote['host']}:#{@remote['path']}"
       @remote_uri += "/" if not @remote_uri[-1,1] == "/"
     rescue
-      puts "There was a problem parsing yoru config file"
+      puts "There was a problem parsing your config file"
       exit 1
     end
     

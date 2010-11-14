@@ -78,7 +78,7 @@ module DeployTo
         opts.banner = "Usage: deploy-to [options] site_name"
         #Version
         opts.on("-v","--version","Outputs version") { 
-          puts "Production Sync - #{DeployTo::VERSION}"
+          puts "deploy-to: #{DeployTo::VERSION}"
           exit 
         }
         opts.on("-s","--simulate","Simulate only") {

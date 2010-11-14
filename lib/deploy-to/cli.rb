@@ -16,7 +16,7 @@ module DeployTo
       @base_dir = File.expand_path('../',DeployTo::Config.config_file)
 
       #Set what will not be @site_name after running optparse
-      @site_name = ARGV.shift
+      @remote_name = ARGV.shift
       
       # Parse the config file and the @site_name
       # to see if we should continue. This method will exit1
@@ -28,8 +28,7 @@ module DeployTo
     # Run the command
     def run
       build_command
-      puts "Running:\n"
-      puts @command + "\n\n"
+      puts "Deploying to #{@remote_name}:\n"
       # Display a message if we're only doing a dry run
       if @dry_run
         puts "Dry run only -->\n"
@@ -63,7 +62,7 @@ module DeployTo
       dry_run = @dry_run ? ' --dry-run' : ''
       
       # Define the command
-      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@site_uri}"
+      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@remote_uri}"
       
     end
     
@@ -93,30 +92,40 @@ module DeployTo
     # exit 1 if we can't proceed.
     def parse_config
       # Make sure there are site definitions
-      if not @config.has_key?('sites')
-        puts "Please add at least one site definitions to your deploy-to.yml file."
+      if not @config.has_key?('remotes')
+        puts "Please add at least one remote definitions to your deploy-to.yml file."
         exit 1
       end
       
       # Check for a site_name.
-      if @site_name.nil?
-        puts "Specify which site you woud like to deploy:\n"
-        @config['sites'].each do |site|
-          puts site[0] + "\n"
+      if @remote_name.nil?
+        puts "Specify which remote you woud like to deploy:\n"
+        @config['remotes'].each do |remote|
+          puts remote[0] + "\n"
         end
         exit 1
       end
 
       # Make sure the site_name is defined.
-      if not @config['sites'].has_key?(@site_name)
-        puts "There is no definitions for \"#{@site_name}\" in your deploy-to.yml file."
+      if not @config['remotes'].has_key?(@remote_name)
+        puts "There is no definitions for \"#{@remote_name}\" in your deploy-to.yml file."
         exit 1
       end
       
-      # Define some variables.
-      @site = @config['sites'][@site_name]
-      @site_uri = "#{@site['user']}@#{@site['host']}:#{@site['path']}"
-      @site_uri += "/" if not @site_uri[-1,1] == "/"
+      @remote = @config['remotes'][@remote_name]
+      
+      # Check that your remote has all the options we need
+      if not @remote.has_key?('user') or not @remote.has_key?('host') or not @remote.has_key?('path')
+        puts "Your remote: #{@remote_name} must contain user,host, and path"
+        exit 1
+      end
+      
+      # Define the URI
+      @remote_uri = "#{@remote['user']}@#{@remote['host']}:#{@remote['path']}"
+      @remote_uri += "/" if not @remote_uri[-1,1] == "/"
+    rescue
+      puts "There was a problem parsing yoru config file"
+      exit 1
     end
     
   end

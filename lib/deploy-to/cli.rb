@@ -101,7 +101,7 @@ module DeployTo
       if @remote_name.nil?
         puts "Specify which remote you woud like to deploy:\n"
         @config['remotes'].each do |remote|
-          puts remote[0] + "\n"
+          puts "\s\s-> " + remote[0] + "\n"
         end
         exit 1
       end

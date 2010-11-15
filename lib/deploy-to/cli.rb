@@ -38,31 +38,29 @@ module DeployTo
     
     private
 
-    #Define the command to run
+    # Build the rsync command to run
     def build_command
       
-      #Define the excludes
+      # Initialise the excludes array
       excludes = Array.new
       
+      # Fill the excludes array from the excludes listed in the config file
       if(@config.has_key?('ignore'))
         if not @config['ignore'].empty?
           @config['ignore'].each do |ignore|
-            excludes << "--exclude \'#{ignore}\'"
+            excludes << " --exclude \'#{ignore}\'"
           end
         end
       end
       
-      if not excludes.empty?
-        exclude_cli = excludes.join(' ')
-      else
-        exclude_cli = ''
-      end
+      # Build the CLI excludes arguments for rsync
+      exclude_cli = excludes.empty? ? '' : excludes.join
       
       # If we're in a dry run, set the rsync option
       dry_run = @dry_run ? ' --dry-run' : ''
       
       # Define the command
-      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml' #{exclude_cli} #{@base_dir}/ #{@remote_uri}"
+      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
       
     end
     

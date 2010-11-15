@@ -98,8 +98,8 @@ module DeployTo
       # Check for a site_name.
       if @remote_name.nil?
         puts "Specify which remote you woud like to deploy:\n"
-        @config['remotes'].each do |remote|
-          puts "\s\s*\s" + remote[0] + "\n"
+        @config['remotes'].each do |remote_name,remote|
+          puts "\s\s*\s" + remote_name + " (#{remote['host']})" + "\n"
         end
         exit 1
       end

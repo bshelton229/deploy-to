@@ -11,9 +11,15 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
     ]
 
     # deploy-to sites definition
-    sites:
+    remotes:
       # Production server
       production:
         host: example.com
         user: bshelton
         path: ~/example.com/
+      
+      # Dev Server
+      dev:
+        host: dev.example.com
+        user: bshelton
+        path: ~/dev.example.com

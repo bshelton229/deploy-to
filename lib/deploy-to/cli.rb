@@ -60,7 +60,7 @@ module DeployTo
       dry_run = @dry_run ? ' --dry-run' : ''
       
       # Define the command
-      @command = "#{@rsync} -aiz --no-t --no-p --size-only --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
+      @command = "#{@rsync} -aiz --no-t --no-p --checksum --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
       
     end
     

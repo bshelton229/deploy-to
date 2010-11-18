@@ -48,7 +48,13 @@ module DeployTo
       if(@config.has_key?('ignore'))
         if not @config['ignore'].empty?
           @config['ignore'].each do |ignore|
-            excludes << " --exclude \'#{ignore}\'"
+            # Ability here to check for ! to see if we should use --include
+            if(ignore[0,1] == "!")
+              ignore.slice!(0)
+              excludes << " --include \'#{ignore}\'"
+            else
+              excludes << " --exclude \'#{ignore}\'"
+            end
           end
         end
       end

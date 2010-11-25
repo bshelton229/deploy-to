@@ -38,6 +38,10 @@ module DeployTo
         puts "Dry run only -->\n"
       end
       run_command
+
+      # Run the post commands
+      DeployTo::PostCommands.run_commands(@remote)
+      
     end
     
     private

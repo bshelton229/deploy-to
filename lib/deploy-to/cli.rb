@@ -8,13 +8,15 @@ module DeployTo
     def initialize
       
       # Initialise some variables
-      @config = DeployTo::Config.get_config
       @command = false
       @post_commands_only = false
       @rsync = `which rsync`.chop
 
       #Parse the CLI options with optparse
       parse_options
+      
+      # Get the config information
+      @config = DeployTo::Config.get_config
 
       # Configuration Base
       @real_base = File.expand_path('../',DeployTo::Config.config_file)
@@ -46,7 +48,7 @@ module DeployTo
       end
 
       # Run the post commands
-      DeployTo::PostCommands.run_commands(@remote)
+      DeployTo::PostCommands.run_commands(@remote) if not @dry_run
       
     end
     

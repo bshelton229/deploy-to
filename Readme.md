@@ -10,8 +10,9 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
       .DS_Store
     ]
     
-    # Re-define the base relative to the project root
-    base: lib
+    # OPTIONAL: Re-define the base relative to the project root.
+    # If this is not set, the base will be the project root.
+    # base: lib
 
     # deploy-to sites definition
     remotes:

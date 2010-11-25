@@ -6,12 +6,15 @@ module DeployTo
     attr_reader :config, :rsync
 
     def initialize
-      #Parse the CLI options with optparse
-      parse_options
       
+      # Initialise some variables
       @config = DeployTo::Config.get_config
       @command = false
+      @post_commands_only = false
       @rsync = `which rsync`.chop
+
+      #Parse the CLI options with optparse
+      parse_options
 
       # Configuration Base
       @real_base = File.expand_path('../',DeployTo::Config.config_file)
@@ -31,13 +34,16 @@ module DeployTo
     
     # Run the command
     def run
-      build_command
-      puts "Deploying to #{@remote_name}:\n"
-      # Display a message if we're only doing a dry run
-      if @dry_run
-        puts "Dry run only -->\n"
+      # Make sure we're not running post commands only
+      if not @post_commands_only
+        build_command
+        puts "Deploying to #{@remote_name}:\n"
+        # Display a message if we're only doing a dry run
+        if @dry_run
+          puts "Dry run only -->\n"
+        end
+        run_command
       end
-      run_command
 
       # Run the post commands
       DeployTo::PostCommands.run_commands(@remote)
@@ -86,15 +92,19 @@ module DeployTo
     # Optparse options 
     def parse_options
       ARGV.options do |opts|
-        #Set usage banner
+        # Set usage banner
         opts.banner = "Usage: deploy-to [options] site_name"
-        #Version
+        # Version
         opts.on("-v","--version","Outputs version") { 
           puts "deploy-to: #{DeployTo::VERSION}"
           exit 
         }
         opts.on("-s","--simulate","Simulate only") {
           @dry_run = true
+        }
+        # Run post commands
+        opts.on("-c","--post-commands","Run Post Commands only") {
+          @post_commands_only = true
         }
         opts.parse!
       end

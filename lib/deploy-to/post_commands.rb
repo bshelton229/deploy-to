@@ -11,7 +11,7 @@ module DeployTo
         
         # Iterate through the commands and run them 
         commands.each do |command|
-          puts "Running #{command}\n"
+          puts "Running \"#{command}\"\n"
           system "ssh #{uri} 'cd #{remote['path']}; #{command}'"
         end
         

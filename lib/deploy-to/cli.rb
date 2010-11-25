@@ -12,7 +12,11 @@ module DeployTo
       @config = DeployTo::Config.get_config
       @command = false
       @rsync = `which rsync`.chop
-      #Find our base dir
+
+      # Configuration Base
+      @real_base = File.expand_path('../',DeployTo::Config.config_file)
+      
+      # Find our base dir
       @base_dir = File.expand_path('../',DeployTo::Config.config_file)
 
       #Set what will not be @site_name after running optparse
@@ -95,6 +99,7 @@ module DeployTo
     # This will check our configuration variables and
     # exit 1 if we can't proceed.
     def parse_config
+      
       # Make sure there are site definitions
       if not @config.has_key?('remotes')
         puts "Please add at least one remote definitions to your deploy-to.yml file."
@@ -118,6 +123,8 @@ module DeployTo
       
       @remote = @config['remotes'][@remote_name]
       
+      get_base # Use the get base method to get the base from the config
+      
       # Check that your remote has all the options we need
       if not @remote.has_key?('user') or not @remote.has_key?('host') or not @remote.has_key?('path')
         puts "Your remote: #{@remote_name} must contain user,host, and path"
@@ -130,6 +137,20 @@ module DeployTo
     rescue
       puts "There was a problem parsing your config file"
       exit 1
+    end
+    
+    # Gets the base for the config file
+    def get_base
+      # See if we need to extend the base_dir
+      if @config['base']
+        extended_base = File.expand_path(File.join(@real_base, @config['base']))
+        if File.directory? extended_base
+          @base_dir = extended_base
+        else
+          puts "Your base directory doesn't exist: #{extended_base}"
+          exit 1
+        end
+      end
     end
     
   end

@@ -9,6 +9,9 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
       .htaccess,
       .DS_Store
     ]
+    
+    # Re-define the base relative to the project root
+    base: lib
 
     # deploy-to sites definition
     remotes:

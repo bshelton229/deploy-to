@@ -18,23 +18,23 @@ module DeployTo
     end
   
     private
+
     #Recursively look for the config file
     def self.lookfor(path)
-      #Get out of here if we're at root (/)
-      if path == "/"
-        puts "Can't find a deploy-to.yml file."
-        exit 1
-      end
-    
       #Define the file given the path
       file = File.join(path,'deploy-to.yml')
       if File.exists? file
         return file
       else
-        # We didn't find a file, recurse the path
-        # backwards and try again
-        self.lookfor(File.expand_path('../',path))
+        back = File.expand_path('../',path)
+        if not path.eql?(back)
+          self.lookfor(back)
+        else
+          puts "Can't find a deploy-to.yml file."
+          exit 1
+        end
       end
     end
+    
   end
 end

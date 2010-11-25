@@ -21,6 +21,7 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
         host: example.com
         user: bshelton
         path: ~/example.com/
+        post_commands: ['~/bin/cleanup.sh', 'rake db:migrate']
       
       # Dev Server
       dev:

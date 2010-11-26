@@ -174,7 +174,12 @@ module DeployTo
     
     # Find Rsync
     def find_rsync
-      `which rsync`.chop
+      rsync = `which rsync`.chop
+      if rsync.empty?
+        puts "Can't locate rsync"
+        exit 1
+      end
+      return rsync
     end
     
   end

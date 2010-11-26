@@ -48,7 +48,10 @@ module DeployTo
       end
 
       # Run the post commands
-      DeployTo::PostCommands.run_commands(@remote) if not @dry_run
+      # Pass @dry_run as the second argument,
+      # if true, the commands that would be run are displayed,
+      # if false, the comands are run
+      DeployTo::PostCommands.run_commands(@remote,@dry_run)
       
     end
     

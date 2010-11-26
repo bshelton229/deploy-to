@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email = 'bryan@sheltonopensolutions.com'
   s.summary = 'Rsync deployment application'
   s.homepage = 'http://github.com/bshelton229/deploy-to'
-  s.description = 'DeployTo Project'
+  s.description = 'Allows you to create a deploy-to.yml file in your poject that determines different ignores and remote locations to deploy your project via rsync.'
 
   s.required_ruby_version     = '>= 1.8.6'
   s.required_rubygems_version = ">= 1.3.6"

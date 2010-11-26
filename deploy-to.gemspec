@@ -1,14 +1,14 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'deploy-to'
+require 'deploy-to/version'
 
 Gem::Specification.new do |s|
   s.name = 'deploy-to'
   s.version = DeployTo::VERSION
   s.authors = ["Bryan Shelton"]
   s.email = 'bryan@sheltonopensolutions.com'
-  s.summary = 'Rsync deployment wrapper'
+  s.summary = 'Rsync deployment application'
   s.homepage = 'http://github.com/bshelton229/deploy-to'
   s.description = 'DeployTo Project'
 

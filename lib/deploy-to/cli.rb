@@ -10,7 +10,7 @@ module DeployTo
       # Initialise some variables
       @command = false
       @post_commands_only = false
-      @rsync = `which rsync`.chop
+      @rsync = find_rsync
 
       #Parse the CLI options with optparse
       parse_options
@@ -170,6 +170,11 @@ module DeployTo
           exit 1
         end
       end
+    end
+    
+    # Find Rsync
+    def find_rsync
+      `which rsync`.chop
     end
     
   end

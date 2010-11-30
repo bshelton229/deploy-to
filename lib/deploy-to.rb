@@ -1,4 +1,3 @@
-require 'optparse'
 require 'yaml'
 require 'date'
 

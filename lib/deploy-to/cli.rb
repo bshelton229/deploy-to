@@ -98,13 +98,13 @@ module DeployTo
     def parse_options
       ARGV.options do |opts|
         # Set usage banner
-        opts.banner = "Usage: deploy-to [options] site_name"
+        opts.banner = "Usage: deploy-to [options] remote_name"
         # Version
         opts.on("-v","--version","Outputs version") { 
           puts "deploy-to: #{DeployTo::VERSION}"
           exit 
         }
-        opts.on("-s","--simulate","Simulate only") {
+        opts.on("-n","--dry-run","Only show what would be done") {
           @dry_run = true
         }
         # Run post commands

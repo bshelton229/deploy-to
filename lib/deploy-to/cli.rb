@@ -11,6 +11,7 @@ module DeployTo
       @command = false
       @post_commands_only = false
       @rsync = find_rsync
+      @ignore = false
 
       #Parse the CLI options with optparse
       parse_options
@@ -67,16 +68,14 @@ module DeployTo
       excludes = Array.new
       
       # Fill the excludes array from the excludes listed in the config file
-      if(@config.has_key?('ignore'))
-        if not @config['ignore'].empty?
-          @config['ignore'].each do |ignore|
-            # Ability here to check for ! to see if we should use --include
-            if(ignore[0,1] == "!")
-              ignore.slice!(0)
-              excludes << " --include \'#{ignore}\'"
-            else
-              excludes << " --exclude \'#{ignore}\'"
-            end
+      if @ignore
+        @ignore.each do |ignore|
+          # Ability here to check for ! to see if we should use --include
+          if(ignore[0,1] == "!")
+            ignore.slice!(0)
+            excludes << " --include \'#{ignore}\'"
+          else
+            excludes << " --exclude \'#{ignore}\'"
           end
         end
       end
@@ -87,6 +86,19 @@ module DeployTo
       # If we're in a dry run, set the rsync option
       dry_run = @dry_run ? ' --dry-run' : ''
       
+      # Check for port and identity file
+      ssh_options = Array.new
+      if @remote.has_key?('port')
+        if (port=@remote['port']).to_i > 0
+          ssh_options << "-p #{port}"
+        end
+      end
+      
+      # Build additions if there are ssh_options in the array
+      ssh_additions = ssh_options.empty? ? '' : " -e '" + (ssh_options.unshift('ssh')).join(' ') + "'"
+      
+      puts ssh_additions
+      
       # Define the command
       @command = "#{@rsync} -aiz --no-t --no-p --checksum --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
       
@@ -94,7 +106,8 @@ module DeployTo
     
     # Run the command if @command has been set
     def run_command
-      system @command if @command
+      #system @command if @command
+      puts @command if @command
     end
     
     # Optparse options 
@@ -147,9 +160,11 @@ module DeployTo
       
       get_base # Use the get base method to get the base from the config
       
+      set_ignore # Set ignore
+      
       # Check that your remote has all the options we need
       if not @remote.has_key?('host') or not @remote.has_key?('path')
-        puts "Your remote: #{@remote_name} must contain user,host, and path"
+        puts "Your remote: #{@remote_name}, must at least contain host and path."
         exit 1
       end
       
@@ -174,6 +189,14 @@ module DeployTo
           puts "Your base directory doesn't exist: #{extended_base}"
           exit 1
         end
+      end
+    end
+    
+    # Get ignores
+    def set_ignore
+      if @config.has_key?('ignore') and not @config['ignore'].nil? and not @config['ignore'].empty?
+        @ignore = @config['ignore']
+        @ignore = Array.new << @ignore if not @ignore.kind_of?(Array)
       end
     end
     

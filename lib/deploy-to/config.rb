@@ -11,7 +11,12 @@ module DeployTo
         #Search for the config file, start at PWD and go backwards
         if file = get_config_file
           #Load the YAML
-          @options = YAML::load(File.open(file))
+          begin
+            @options = YAML::load(File.open(file))
+          rescue
+            puts "There was an error parsing your deploy-to.yml config file."
+            exit 1
+          end
         else
           @options = false
         end

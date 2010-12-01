@@ -7,7 +7,8 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
     # Ignore files, relative from base (currently base is the root of the project only)
     ignore: [
       .htaccess,
-      .DS_Store
+      .DS_Store,
+      '!/test/.htaccess'
     ]
     
     # OPTIONAL: Re-define the base relative to the project root.
@@ -28,3 +29,5 @@ A rubygem application that lets you deploy via rsync using --excludes and host i
         host: dev.example.com
         user: bshelton
         path: ~/dev.example.com
+        identity_file: ~/.ssh/this_server.pub
+        port: 111

@@ -27,6 +27,9 @@ module DeployTo
       #Set what will not be @site_name after running optparse
       @remote_name = ARGV.shift
       
+      ### FIND REMOTE HERE
+    
+      
       # Parse the config file and the @site_name
       # to see if we should continue. This method will exit1
       # if there are any problems.
@@ -145,13 +148,15 @@ module DeployTo
       get_base # Use the get base method to get the base from the config
       
       # Check that your remote has all the options we need
-      if not @remote.has_key?('user') or not @remote.has_key?('host') or not @remote.has_key?('path')
+      if not @remote.has_key?('host') or not @remote.has_key?('path')
         puts "Your remote: #{@remote_name} must contain user,host, and path"
         exit 1
       end
       
-      # Define the URI
-      @remote_uri = "#{@remote['user']}@#{@remote['host']}:#{@remote['path']}"
+      # Build the URI
+      @remote_uri = ''
+      @remote_uri += "#{@remote['user']}@" if @remote.has_key?('user')
+      @remote_uri += "#{@remote['host']}:#{@remote['path']}"
       @remote_uri += "/" if not @remote_uri[-1,1] == "/"
     rescue
       puts "There was a problem parsing your config file"

@@ -28,9 +28,11 @@ module DeployTo
     
     private
     
-    # Build the URI
+    # Build the URI for SSH to push to
     def self.build_uri(remote)
-      "#{remote['user']}@#{remote['host']}"
+      out = ''
+      out += "#{remote['user']}@" if remote.has_key?('user')
+      out += "#{remote['host']}"
     end
     
   end

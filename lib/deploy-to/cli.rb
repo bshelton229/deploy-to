@@ -24,17 +24,14 @@ module DeployTo
       # Configuration Base
       @real_base = File.expand_path('../',DeployTo::Config.config_file)
       
-      # Find our base dir
-      @base_dir = File.expand_path('../',DeployTo::Config.config_file)
+      # Default our base_dir to the real_base, or config file base
+      @base_dir = @real_base
 
       #Set what will not be @site_name after running optparse
       @remote_name = ARGV.shift
-      
-      ### FIND REMOTE HERE
-    
-      
+            
       # Parse the config file and the @site_name
-      # to see if we should continue. This method will exit1
+      # to see if we should continue. This method will exit 1
       # if there are any problems.
       parse_config
     

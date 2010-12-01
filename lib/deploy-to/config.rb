@@ -9,15 +9,12 @@ module DeployTo
         return @options if @options
 
         #Search for the config file, start at PWD and go backwards
-        return false if not file = get_config_file
-  
-        #Load the YAML
-        @options = YAML::load(File.open(file))
-      end
-      
-      def get_remote(remote)
-        # We need to try to get options
-        get_config if not @options
+        if file = get_config_file
+          #Load the YAML
+          @options = YAML::load(File.open(file))
+        else
+          @options = false
+        end
         
       end
 

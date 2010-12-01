@@ -16,7 +16,10 @@ module DeployTo
       parse_options
       
       # Get the config information
-      @config = DeployTo::Config.get_config
+      if not @config = DeployTo::Config.get_config
+        puts "Can't find a deploy-to.yml file."
+        exit 1
+      end
 
       # Configuration Base
       @real_base = File.expand_path('../',DeployTo::Config.config_file)

@@ -9,10 +9,16 @@ module DeployTo
         return @options if @options
 
         #Search for the config file, start at PWD and go backwards
-        file = get_config_file
+        return false if not file = get_config_file
   
         #Load the YAML
         @options = YAML::load(File.open(file))
+      end
+      
+      def get_remote(remote)
+        # We need to try to get options
+        get_config if not @options
+        
       end
 
       private
@@ -33,8 +39,7 @@ module DeployTo
           if not path.eql?(back)
             lookfor(back)
           else
-            puts "Can't find a deploy-to.yml file."
-            exit 1
+            return false
           end
         end
       end

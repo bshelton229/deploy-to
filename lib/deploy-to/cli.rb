@@ -88,26 +88,28 @@ module DeployTo
       
       # Check for port and identity file
       ssh_options = Array.new
+
       if @remote.has_key?('port')
         if (port=@remote['port']).to_i > 0
           ssh_options << "-p #{port}"
         end
       end
       
+      if @remote.has_key?('identity_file')
+        ssh_options << "-i #{File.expand_path @remote['identity_file']}"
+      end
+      
       # Build additions if there are ssh_options in the array
       ssh_additions = ssh_options.empty? ? '' : " -e '" + (ssh_options.unshift('ssh')).join(' ') + "'"
       
-      puts ssh_additions
-      
       # Define the command
-      @command = "#{@rsync} -aiz --no-t --no-p --checksum --delete#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
+      @command = "#{@rsync} -aiz --no-t --no-p --checksum --delete#{ssh_additions}#{dry_run} --exclude '.git' --exclude '.svn' --exclude '.gitignore' --exclude 'deploy-to.yml'#{exclude_cli} #{@base_dir}/ #{@remote_uri}"
       
     end
     
     # Run the command if @command has been set
     def run_command
-      #system @command if @command
-      puts @command if @command
+      system @command if @command
     end
     
     # Optparse options 

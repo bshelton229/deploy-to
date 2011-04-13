@@ -6,7 +6,7 @@ require 'deploy-to/version'
 Gem::Specification.new do |s|
   s.name = 'deploy-to'
   s.version = DeployTo::VERSION
-  s.authors = ["Bryan Shelton"]
+  s.authors = ["Bryan Shelton", "Perry Kibler"]
   s.email = 'bryan@sheltonopensolutions.com'
   s.summary = 'Rsync deployment application'
   s.homepage = 'http://github.com/bshelton229/deploy-to'

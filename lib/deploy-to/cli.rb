@@ -129,7 +129,15 @@ module DeployTo
         opts.on("-c","--post-commands","Run Post Commands only") {
           @post_commands_only = true
         }
-        opts.parse!
+        
+        # Rescue a bad option
+        begin
+          opts.parse!
+        rescue OptionParser::InvalidOption => e
+          puts "#{e}\n"
+          puts opts
+          exit 1
+        end
       end
     end
     

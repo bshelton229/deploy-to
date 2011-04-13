@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
 
   s.executables = ["d2"]
   
-  s.files = Dir['Readme.md','lib/**/*','bin/*']
+  s.files = Dir['Readme.md', 'LICENSE', 'lib/**/*', 'bin/*']
 end
